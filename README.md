@@ -1,21 +1,20 @@
 # WordleLab
 
-WordleLab is a research platform designed to determine the effects of various emotions have on users' ability to solve word puzzles.
+WordleLab is a research platform designed to evaluate how incidental emotions and computational empathy influence people's ability to solve word puzzles. It is built with a Django backend to capture and save data, and a React frontend app that's forked from the fabulous [React Wordle](https://github.com/cwackerfuss/react-wordle).
 
-Users are given a pre-game survey, then are asked to complete a set number of rounds of WordleLab. We define a round of WordleLab as a complete game of normal Wordle. Once the user has completed enough rounds, they will be asked to complete a post-game survey, after which they will be forwarded to continue to Prolific, if applicable. Otherwise they're free to continue playing WordleLab as long as they like with bonus rounds.
+Find the deployed WordleLab at [https://wordlelab.media.mit.edu/](https://wordlelab.media.mit.edu/), which consists of 5 components: (1) a pre-game survey, (2) multiple rounds of Wordle, (3) a post-game survey, (4) a link back to Prolific (for participants recruited from Prolific), and (5) an opportunity to play bonus rounds of Wordle.
 
-WordleLab consists of a Django backend to capture and save data, and a React frontend app that's forked from the fabulous [React Wordle](https://github.com/cwackerfuss/react-wordle).
+The deployed WordleLab will randomly assign you to one of 4 conditions:
 
-To try it out, head to [https://wordlelab.media.mit.edu/](https://wordlelab.media.mit.edu/).
+1) No empathetic agent and no emotional priming
+2) Empathetic agent and no emotional priming
+3) No empathetic agent and emotional priming.
+4) Empathetic agent and emotional priming
 
-The page has four modes it will randomly choose between:
+![Screen Shot 2022-07-12 at 6 56 38 AM](https://user-images.githubusercontent.com/6493919/178481592-fd5a32c4-6358-44ad-9b82-31769251e5c3.png)
 
-1) No empathetic agent, and no emotional priming
-2) Empathetic agent, but no emotional priming
-3) No empathetic agent, but emotional priming.
-4) Empathetic agent, and emotional priming
+If you want to experience the empathetic agent and emotion priming condition, then simply add the parameters `?mightymorphin=true` to the URL like so: [https://wordlelab.media.mit.edu/?mightymorphin=true](https://wordlelab.media.mit.edu/?mightymorphin=true).
 
-To force the page to give you option 4 with both the empathetic agent and emotional priming, access the page with the parameters `?mightymorphin=true`. Like [so](https://wordlelab.media.mit.edu/?mightymorphin=true).
 
 ## Build and Run Locally
 
@@ -42,7 +41,7 @@ sudo chmod 777 /var/log/django
 Copy the template passwords file to a new passwords file.
 
 ```
-cp passwords-template.py passwords.py
+cp src/passwords-template.py src/passwords.py
 ```
 
 Edit the new `passwords.py` file with the appropriate files and connection information for your database of choice. The default is a sqlite file that will live in the project's base directory. For more information on Django settings, please read the amazing [Django Tutorial](https://docs.djangoproject.com/en/4.0/intro/tutorial02/).
