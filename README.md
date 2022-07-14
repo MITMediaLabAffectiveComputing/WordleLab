@@ -56,7 +56,7 @@ python src/manage.py runserver
 
 You can now access your local Django instance by going to [http://localhost:8000/admin/](http://localhost:8000/admin/) and logging in with the credentials you created above with the `createsuperuser` command.
 
-### React Setup
+### React Development Setup
 
 In a new tab from the one that's running `runserver` from the command above, `cd` into the react directory.
 
@@ -64,9 +64,16 @@ In a new tab from the one that's running `runserver` from the command above, `cd
 cd react
 ```
 
-Make sure you have NPM installed. I recommend running `brew install node; npm install -g npm@latest` however there are other installation methods if you prefer.
+Make sure you have Node and NPM installed. I recommend installing node via Homebrew, but there are other options. 
 
-Now, install React's dependencies.
+```
+brew install node # Only run this if you install Node via Homebrew!
+npm install -g npm@latest
+```
+
+**Important Note:** WordleLab has been tested with Node v16.16.0 and v18.5.0. If you experience build errors, you most likely want to upgrade your Node version.
+
+Now that Node and NPM are installed and updated, install React's dependencies.
 
 ```
 mkdir -p .git
@@ -80,6 +87,8 @@ npm run start
 ```
 
 This will open a new browser tab to [http://localhost:3000](http://localhost:3000), where the React server is running. You can now use that port to access your Django pages/APIs as well, like [http://localhost:3000/admin/](http://localhost:3000/admin/). Make sure you still have your Django `runserver` running in another Terminal tab for the Django pages to be visible.
+
+As mentioned above, if the page does not successfully load, please check your Node version and make sure it's v16.16.0, v18.5.0, or fully upgraded.
 
 ## Testing Locally
 
