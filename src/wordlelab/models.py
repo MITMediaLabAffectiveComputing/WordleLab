@@ -98,6 +98,7 @@ class GuessEvent(models.Model):
     solution = models.CharField(max_length=64)
     remote_timestamp = models.DateTimeField()
     server_time = models.DateTimeField()
+    teddy_response = models.CharField(max_length=64)
 
     def __str__(self):
         return f"{self.participant} - {self.round_index}|{self.guess_index}"

@@ -10,10 +10,18 @@ type Props = {
   didWin: boolean
   isIntro: boolean
   isOpen: boolean
+  TextStatus: boolean
+  ai_text_status: boolean
 }
 
+const get_random = function (list: any[]) {
+  return list[Math.floor((Math.random() * list.length))];
+}
+
+import { onTextChange } from '../App'
+
 export const ModalFeedbackMessage = ({
-                                       numberOfGuessesMade, didWin, isIntro, isOpen
+                                       numberOfGuessesMade, didWin, isIntro, isOpen, TextStatus, ai_text_status
                                      }: Props) => {
 
   const [message, setMessage] = useState('')
@@ -45,7 +53,12 @@ export const ModalFeedbackMessage = ({
       }
     }
 
-    setMessage(feedback.text)
+    if (ai_text_status) {
+      setMessage(feedback.ai_text)
+    } else{
+      setMessage(get_random(feedback.text))
+    }
+
     setMessageCount(messageCount + 1)
     // inputs['idle']?.fire()
     inputs[feedback.animation]?.fire()
@@ -71,7 +84,7 @@ export const ModalFeedbackMessage = ({
     if (!didWin) {
       setFeedback(getEmotionalFeedback().onLoss)
     } else {
-      setFeedback(getEmotionalFeedback().onWin[numberOfGuessesMade - 1])
+      setFeedback(getEmotionalFeedback().onWin)
     }
   }, [numberOfGuessesMade, didWin, rive])
 
@@ -89,6 +102,60 @@ export const ModalFeedbackMessage = ({
     }
   }, [isOpen])
 
+  if (!TextStatus) {
+    return (
+      <div className={'max-w-sm mx-auto mb-3 h-[80px] px-2 relative'}>
+        <div className='relative h-[80px] mx-3 '>
+          <div
+            className='relative h-full'>
+            <div className='shadow-md  rounded-full overflow-hidden h-full w-[80px] absolute left-[0px] top-[0px]'>
+              <RiveComponent
+                className='h-[86px] w-[86px] -mt-[3px] -ml-[3px]' />
+            </div>
+            <Transition
+              show={!showTeddy}
+              enter='transition-opacity duration-400'
+              enterFrom='opacity-0'
+              enterTo='opacity-100'
+              leave='transition-opacity duration-400'
+              leaveFrom='opacity-100'
+              leaveTo='opacity-0'
+            >
+              <div className='absolute top-0 left-0 right-0 -bottom-2 bg-white' />
+  
+            </Transition>
+  
+            <div
+              className='shadow-md bg-white rounded-xl justify-center flex flex-col bg-white absolute top-2 left-[90px] right-0 bottom-2 -mr-2 border-solid border border-slate-200'>
+              <div
+                className='absolute left-[-8px] bottom-[12px] bg-white h-[16px] w-[16px] skew-y-[30deg] -rotate-[60deg] border-l-solid border-b-solid border-l border-t border-slate-200 flex justify-center flex-row'></div>
+              {(getHasEnhancedFeedback() && <div
+                className='text-sm align-middle px-4 text-left text-[18px] leading-6 font cursor-default'>
+                <div className='relative text-white'>
+                  {message}
+                  <div className='absolute top-0 left-0 right-0 bottom-0 text-black'>
+                    <Linebreaker fontStyle={'18px arial'} width={162}>
+                      {/* <WindupChildren> */}
+                        <span key={messageCount}>{message}</span>
+                      {/* </WindupChildren> */}
+                    </Linebreaker>
+                  </div>
+  
+                </div>
+              </div>)}
+              {(!getHasEnhancedFeedback() && <div
+                className='text-sm py-2 align-middle pr-4 pl-4 text-center block text-[18px]'>
+                {message}
+              </div>)}
+            </div>
+  
+          </div>
+        </div>
+      </div>
+    )
+  } 
+
+  onTextChange()
   return (
     <div className={'max-w-sm mx-auto mb-3 h-[80px] px-2 relative'}>
       <div className='relative h-[80px] mx-3 '>

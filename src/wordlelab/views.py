@@ -1,12 +1,13 @@
 from django.http import HttpResponse, Http404
-
+import os
+import openai
 from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from wordlelab.models import Participant, GuessEvent, RoundCompleteEvent
-
+import requests
 
 @csrf_exempt
 def presurvey(request):
@@ -45,7 +46,6 @@ def presurvey(request):
     participant.presurvey_time = datetime.datetime.now(tz=timezone.utc)
     participant.presurvey_events = json.loads(presurvey_events)
     participant.save()
-
     result = dict(success=True)
     return HttpResponse(json.dumps(result))
 
@@ -75,7 +75,6 @@ def postsurvey(request):
     result = dict(success=True)
     return HttpResponse(json.dumps(result))
 
-
 @csrf_exempt
 def log_guess(request):
     '''
@@ -88,9 +87,29 @@ def log_guess(request):
     round_index = request.POST.get("roundIndex")
     solution = request.POST.get("solution")
     timestamp = request.POST.get("timestamp")
+    prompt = request.POST.get("prompt")
+    ai_text_status = request.POST.get("ai_text_status")
+
+    def askGPT(text):
+        openai.api_key = API_KEY
+        response = openai.ChatCompletion.create(model="gpt-4-0314", messages=[{"role": "user", "content": text}])
+        resp = response.choices[0]["message"]["content"]
+        resp = resp.split(" ")
+        for i in range(len(resp), 0):
+            if resp[i][0] == "\\":
+                resp.pop(i)
+        resp = " ".join(resp)
+
+        return resp
+
 
     participant = get_object_or_404(Participant, user_id=user_id)
     guess_count = len(json.loads(guesses))
+
+    if ai_text_status == 'true':
+        teddy_response = askGPT(prompt)
+    else:
+        teddy_response = prompt
 
     event = GuessEvent(
         participant=participant,
@@ -101,13 +120,13 @@ def log_guess(request):
         was_valid=was_valid,
         solution=solution,
         remote_timestamp=timezone.make_aware(datetime.datetime.fromtimestamp(int(timestamp) / 1000.0), timezone.utc),
-        server_time=datetime.datetime.now(tz=timezone.utc)
+        server_time=datetime.datetime.now(tz=timezone.utc),
+        teddy_response = teddy_response
     )
     event.save()
 
-    result = dict(success=True)
-    return HttpResponse(json.dumps(result))
 
+    return HttpResponse(json.dumps(teddy_response))
 
 @csrf_exempt
 def log_round_end(request):
