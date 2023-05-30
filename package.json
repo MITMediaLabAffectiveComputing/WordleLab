@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "jquery": "^3.6.3",
+    "openai": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.16"
+  }
+}
