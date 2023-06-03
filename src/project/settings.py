@@ -198,7 +198,7 @@ LOGGING = {
         'logfile': {
             'class': 'logging.handlers.WatchedFileHandler',
             'filters': ['require_debug_false'],
-            'filename': '/var/log/django/django.log',
+            'filename': '/Users/rubyc/Documents/Media_Lab_UROP/WordleLab/var/log/django/django.log',
             'formatter': 'simple',
         },
     },
