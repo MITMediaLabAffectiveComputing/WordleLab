@@ -13,8 +13,6 @@ type Props = {
   gameStats: GameStats
   isGameWon: boolean
   numberOfGuessesMade: number
-  TextStatus: boolean
-  ai_text_status: boolean
 }
 
 export const GameFinishedModal = ({
@@ -22,11 +20,8 @@ export const GameFinishedModal = ({
                                     handleClose,
                                     gameStats,
                                     isGameWon,
-                                    numberOfGuessesMade,
-                                    TextStatus,
-                                    ai_text_status
+                                    numberOfGuessesMade
                                   }: Props) => {
-
   return (
     <BaseModal
       title={`Round ${gameStats.totalGames} Results`}
@@ -46,7 +41,7 @@ export const GameFinishedModal = ({
       )}
 
       <ModalFeedbackMessage numberOfGuessesMade={numberOfGuessesMade} didWin={isGameWon} isIntro={false}
-                            isOpen={isOpen} TextStatus={TextStatus} ai_text_status={ai_text_status}/>
+                            isOpen={isOpen} />
       <div className='h1'>
       </div>
       {/*{isGameWon && (*/}

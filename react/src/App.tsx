@@ -50,15 +50,6 @@ import { ModalBackground } from './components/modals/ModalBackground'
 import { FeedbackMessage } from './components/FeedbackMessage'
 import { PostSurveyEmotionalStateModal } from './components/modals/postsurvey/PostSurveyEmotionalStateModal'
 
-import {prompt} from './components/FeedbackMessage'
-
-let Mesagee = "Enjoy Wordle - you've got this!"
-let PrevMesage = "Enjoy Wordle - you've got this!"
-
-export const onTextChange = () => {
-  PrevMesage = Mesagee
-}
-
 function App() {
   const { width, height } = useWindowSize()
 
@@ -86,17 +77,6 @@ function App() {
   const [isBonusRoundIntroModalOpen, setIsBonusRoundIntroModalOpen] = useState(false)
   const [isConfettiRunning, setIsConfettiRunning] = useState(false)
 
-  //API STATE
-  const [isCallingtotheBackend, setisCallingtotheBackend] = useState(false)
-  let TextStatus = true
-  let AI_text_status = true
-
-  //handle api return
-  const onSuccess = (resp: any) => {
-    PrevMesage = Mesagee
-    Mesagee = resp
-    setisCallingtotheBackend(false)
-  }
 
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
@@ -114,8 +94,6 @@ function App() {
   const [isHighContrastMode, setIsHighContrastMode] = useState(
     getStoredIsHighContrastMode()
   )
-
-
   const [isRevealing, setIsRevealing] = useState(false)
   const [feedbackLog, setFeedbackLog] = useState([] as FeedbackLogElement[])
   const [guesses, setGuesses] = useState<string[]>(() => {
@@ -156,8 +134,6 @@ function App() {
 
   const [isIdle, setIsIdle] = useState(false)
   const [showedIdleThisRound, setShowedIdleThisRound] = useState(false)
-
-  
   useEffect(() => {
     setIsIdle(false)
     if (!isGameActive || showedIdleThisRound) {
@@ -204,7 +180,6 @@ function App() {
       setIsConfettiRunning(true)
       return
     }
-
     const gamestate = loadGameStateFromLocalStorage()
     if (!gamestate || (gamestate.index == 0 && !gamestate.guesses.length)) {
       setTimeout(() => {
@@ -306,10 +281,8 @@ function App() {
     )
   }
 
-  TextStatus = false
-
   const onEnter = () => {
-    if (isGameWon || isGameLost || isCallingtotheBackend) {
+    if (isGameWon || isGameLost) {
       return
     }
 
@@ -321,8 +294,7 @@ function App() {
     }
 
     if (!isWordInWordList(currentGuess)) {
-      setisCallingtotheBackend(true);
-      logGuess(currentGuess, guesses, false, getSolution(), currentSolutionIndex, prompt, AI_text_status, onSuccess)
+      logGuess(currentGuess, guesses, false, getSolution(), currentSolutionIndex)
       setInvalidGuessCount(invalidGuessCount + 1)
       setCurrentRowClass('jiggle')
       if (!getHasEnhancedFeedback()) {
@@ -337,8 +309,7 @@ function App() {
 
     // enforce hard mode - all guesses must contain all previously revealed letters
     if (isHardMode) {
-      setisCallingtotheBackend(true);
-      logGuess(currentGuess, guesses, false, getSolution(), currentSolutionIndex, prompt, AI_text_status, onSuccess)
+      logGuess(currentGuess, guesses, false, getSolution(), currentSolutionIndex)
       const firstMissingReveal = findFirstUnusedReveal(currentGuess, guesses)
       if (firstMissingReveal) {
         setCurrentRowClass('jiggle')
@@ -362,9 +333,7 @@ function App() {
       guesses.length < MAX_CHALLENGES &&
       !isGameWon
     ) {
-
-      setisCallingtotheBackend(true);
-      logGuess(currentGuess, guesses, true, getSolution(), currentSolutionIndex, prompt, AI_text_status, onSuccess)
+      logGuess(currentGuess, guesses, true, getSolution(), currentSolutionIndex)
       setGuesses([...guesses, currentGuess])
       setCurrentGuess('')
 
@@ -393,12 +362,6 @@ function App() {
     }
   }
 
-  if (Mesagee != PrevMesage) {
-    TextStatus = true
-  } else {
-    TextStatus = false
-  }
-
   return (
     <div className='h-screen flex flex-col bg-slate-50'>
       <Navbar
@@ -415,9 +378,6 @@ function App() {
           }
                            currentRound={currentSolutionIndex}
                            isIdle={isIdle}
-                           Message = {Mesagee}
-                           TextStatus = {TextStatus}
-                           ai_text_status = {AI_text_status}
                            onFeedback={onFeedback}
           />
           <Grid
@@ -580,8 +540,6 @@ function App() {
           gameStats={stats}
           isGameWon={isGameWon}
           numberOfGuessesMade={guesses.length}
-          TextStatus={TextStatus}
-          ai_text_status={AI_text_status}
         />
         <SettingsModal
           isOpen={isSettingsModalOpen}
@@ -605,6 +563,5 @@ function App() {
     </div>
   )
 }
-
 
 export default App
