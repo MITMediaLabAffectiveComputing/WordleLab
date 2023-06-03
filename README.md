@@ -118,9 +118,6 @@ Edit the `WORDS` list located in [wordlist.ts](react/src/constants/wordlist.ts).
 
 The emotional agent's behavior is defined in [react/src/lib/enhancedfeedback.ts](react/src/lib/enhancedfeedback.ts). The Teddy character comes with several built-in animations, defined in `FeedbackAnimation`. You may modify the `HELPFUL_TEDDY` object to change what Teddy says or the animations he performs on each trigger. Note that you can also define other "personality" objects based off of `HELPFUL_TEDDY` and return different personalities from the `getEmotionalFeedback()` function based off various circumstances such as round number or randomly decided user bucket (in which case, you'll want to copy `getHasEnhancedFeedback()` in [react/src/lib/localStorage.ts](react/src/lib/localStorage.ts) and make a similar function that determines what personality Teddy should use. Be sure to add a call to your new function in `getUserData()`!)
 
-### Toggling between AI and hard-coded messages
-Depending on the state of the variable `AI_text_status` as defined in [react/src/App.tsx](react/src/App.tsx), the emotional agent will either send messages from ChatGPT-4 or a hard-coded object which is defined in [react/src/lib/enhancedfeedback.ts](react/src/lib/enhancedfeedback.ts). This `HELPFUL_TEDDY` object also contains all the prompts that are sent to the ChatGPT API.  
-
 ### Changing Pre-game or Post-game survey questions
 
 All survey questions are located in Modal files in [react/src/compontents/modals/](react/src/compontents/modals/). You can modify the appropriate modal directly. To bypass a modal or insert your own, just copy how modals are handled in [react/src/App.tsx](react/src/App.tsx).
