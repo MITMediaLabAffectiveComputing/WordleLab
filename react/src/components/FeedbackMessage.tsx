@@ -21,7 +21,7 @@ type Props = {
   isIdle: boolean
   Message: string
   TextStatus: boolean
-  ai_text_status: boolean
+  ChatGPTStatus: boolean
   onFeedback: (key: string) => void
 }
 
@@ -35,7 +35,7 @@ const modIndex = function (list: any[], index: number) {
 
 let turnStartTime: number | null = null
 
-export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRound, isIdle, Message, TextStatus, ai_text_status, onFeedback }: Props) => {
+export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRound, isIdle, Message, TextStatus, ChatGPTStatus, onFeedback }: Props) => {
 
   const [message, setMessage] = useState('')
 
@@ -103,20 +103,23 @@ export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRo
 
     const currentIndex = guesses.length
     if (!getHasEnhancedFeedback()) {
-      setMessage('Guess ' + (currentIndex + 1) + ' of 6')
+      prompt = 'Guess ' + (currentIndex + 1) + ' of 6'
+      if (currentIndex + 1 == 6) {
+        prompt = "Enjoy Wordle - you've got this!"
+      }
       onFeedback('default' + currentIndex)
       return
     }
 
     if (!isShown) {
-      setMessage('')
+      prompt = ''
       return
     }
 
     if (guesses.length && getNumberOfRemainingWords(guesses) <= 5 && !shownMessageLog.includes('reallyclose')) {
       setFeedback(getEmotionalFeedback().onReallyClose)
-      if (ai_text_status) {
-        prompt = getEmotionalFeedback().onReallyClose.ai_text
+      if (ChatGPTStatus) {
+        prompt = getEmotionalFeedback().onReallyClose.ChatGPTResponse
       } else {
         prompt = get_random(getEmotionalFeedback().onReallyClose.text)
       }
@@ -126,8 +129,8 @@ export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRo
 
     if (turnDuration != null && turnDuration < 4000 && !shownMessageLog.includes('fast')) {
       setFeedback(getEmotionalFeedback().onFastGuess)
-      if (ai_text_status) {
-        prompt = getEmotionalFeedback().onFastGuess.ai_text
+      if (ChatGPTStatus) {
+        prompt = getEmotionalFeedback().onFastGuess.ChatGPTResponse
       } else {
         prompt = get_random(getEmotionalFeedback().onFastGuess.text)
       }
@@ -137,8 +140,8 @@ export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRo
 
     if (turnDuration != null && turnDuration > 60000 && !shownMessageLog.includes('slow')) {
       setFeedback(getEmotionalFeedback().onSlowGuess)
-      if (ai_text_status) {
-        prompt = getEmotionalFeedback().onSlowGuess.ai_text
+      if (ChatGPTStatus) {
+        prompt = getEmotionalFeedback().onSlowGuess.ChatGPTResponse
       } else {
         prompt = get_random(getEmotionalFeedback().onSlowGuess.text)
       }
@@ -148,8 +151,8 @@ export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRo
 
     if (currentIndex == 0) {
       setFeedback(getEmotionalFeedback().firstGuess)
-      if (ai_text_status) {
-        prompt = getEmotionalFeedback().firstGuess.ai_text
+      if (ChatGPTStatus) {
+        prompt = getEmotionalFeedback().firstGuess.ChatGPTResponse
       } else {
         prompt = get_random(getEmotionalFeedback().firstGuess.text)
         return
@@ -159,8 +162,8 @@ export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRo
 
     if (currentIndex == 4) {
       setFeedback(getEmotionalFeedback().fifthGuess)
-      if (ai_text_status) {
-        prompt = getEmotionalFeedback().fifthGuess.ai_text
+      if (ChatGPTStatus) {
+        prompt = getEmotionalFeedback().fifthGuess.ChatGPTResponse
       } else {
         prompt = get_random(getEmotionalFeedback().fifthGuess.text)
         return
@@ -170,8 +173,8 @@ export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRo
     }
     if (currentIndex == 5) {
       setFeedback(getEmotionalFeedback().sixthGuess)
-      if (ai_text_status) {
-        prompt = getEmotionalFeedback().sixthGuess.ai_text
+      if (ChatGPTStatus) {
+        prompt = getEmotionalFeedback().sixthGuess.ChatGPTResponse
       } else {
         prompt = get_random(getEmotionalFeedback().sixthGuess.text)
         return
@@ -182,8 +185,8 @@ export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRo
 
     if (currentIndex == 6) {
       setFeedback(getEmotionalFeedback().newGame)
-      if (ai_text_status) {
-        prompt = getEmotionalFeedback().newGame.ai_text
+      if (ChatGPTStatus) {
+        prompt = getEmotionalFeedback().newGame.ChatGPTResponse
       } else {
         prompt = get_random(getEmotionalFeedback().newGame.text)
         return
@@ -192,8 +195,8 @@ export const FeedbackMessage = ({ guesses, invalidGuessCount, isShown, currentRo
 
     if (guesses.length && getNumberOfRemainingWords(guesses) <= 100 && !shownMessageLog.includes('gettingclose')) {
       setFeedback(getEmotionalFeedback().onGettingClose)
-      if (ai_text_status) {
-        prompt = getEmotionalFeedback().onGettingClose.ai_text
+      if (ChatGPTStatus) {
+        prompt = getEmotionalFeedback().onGettingClose.ChatGPTResponse
       } else {
         prompt = get_random(getEmotionalFeedback().onGettingClose.text)
         return

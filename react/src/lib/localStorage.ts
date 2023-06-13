@@ -123,19 +123,18 @@ export const getPrimedEmotion = () => {
 }
 
 export const getHasEnhancedFeedback = () => {
-  // let hasEnhancedFeedback = localStorage.getItem('enhancedFeedback')
-  // if (!hasEnhancedFeedback) {
-  //   const params = (new URL(document.location.toString())).searchParams
-  //   if (params.get('mightymorphin')) {
-  //     hasEnhancedFeedback = 'true'
-  //   } else {
-  //     //hasEnhancedFeedback = Math.random() < 0.5 ? 'true' : 'false'
-  //     hasEnhancedFeedback = 'true'
-  //   }
-  //   localStorage.setItem('enhancedFeedback', hasEnhancedFeedback)
-  // }
-  // return hasEnhancedFeedback == 'true'
-  return true
+  let hasEnhancedFeedback = localStorage.getItem('enhancedFeedback')
+  if (!hasEnhancedFeedback) {
+    const params = (new URL(document.location.toString())).searchParams
+    if (params.get('mightymorphin')) {
+      hasEnhancedFeedback = 'true'
+    } else {
+      hasEnhancedFeedback = Math.random() < 0.5 ? 'true' : 'false'
+    }
+    localStorage.setItem('enhancedFeedback', hasEnhancedFeedback)
+  }
+
+  return hasEnhancedFeedback == 'true'
 }
 
 export const getUserData = () => {

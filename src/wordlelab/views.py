@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from wordlelab.models import Participant, GuessEvent, RoundCompleteEvent
 import requests
+import passwords
 
 @csrf_exempt
 def presurvey(request):
@@ -75,6 +76,19 @@ def postsurvey(request):
     result = dict(success=True)
     return HttpResponse(json.dumps(result))
 
+def askGPT(text):
+    openai.api_key = passwords.CHATGPT_API_KEY
+    response = openai.ChatCompletion.create(model="gpt-4-0314", messages=[{"role": "user", "content": text}])
+    resp = response.choices[0]["message"]["content"]
+    resp = resp.split(" ")
+    for i in range(len(resp), 0):
+        if resp[i][0] == "\\":
+            resp.pop(i)
+    resp = " ".join(resp)
+
+    return resp
+
+
 @csrf_exempt
 def log_guess(request):
     '''
@@ -88,25 +102,11 @@ def log_guess(request):
     solution = request.POST.get("solution")
     timestamp = request.POST.get("timestamp")
     prompt = request.POST.get("prompt")
-    ai_text_status = request.POST.get("ai_text_status")
-
-    def askGPT(text):
-        openai.api_key = API_KEY
-        response = openai.ChatCompletion.create(model="gpt-4-0314", messages=[{"role": "user", "content": text}])
-        resp = response.choices[0]["message"]["content"]
-        resp = resp.split(" ")
-        for i in range(len(resp), 0):
-            if resp[i][0] == "\\":
-                resp.pop(i)
-        resp = " ".join(resp)
-
-        return resp
-
-
+    ChatGPTStatus = request.POST.get("ChatGPTStatus")
     participant = get_object_or_404(Participant, user_id=user_id)
     guess_count = len(json.loads(guesses))
 
-    if ai_text_status == 'true':
+    if ChatGPTStatus == 'true':
         teddy_response = askGPT(prompt)
     else:
         teddy_response = prompt

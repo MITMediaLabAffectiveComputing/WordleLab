@@ -11,7 +11,7 @@ type Props = {
   isIntro: boolean
   isOpen: boolean
   TextStatus: boolean
-  ai_text_status: boolean
+  ChatGPTStatus: boolean
 }
 
 const get_random = function (list: any[]) {
@@ -21,7 +21,7 @@ const get_random = function (list: any[]) {
 import { onTextChange } from '../App'
 
 export const ModalFeedbackMessage = ({
-                                       numberOfGuessesMade, didWin, isIntro, isOpen, TextStatus, ai_text_status
+                                       numberOfGuessesMade, didWin, isIntro, isOpen, TextStatus, ChatGPTStatus
                                      }: Props) => {
 
   const [message, setMessage] = useState('')
@@ -53,8 +53,8 @@ export const ModalFeedbackMessage = ({
       }
     }
 
-    if (ai_text_status) {
-      setMessage(feedback.ai_text)
+    if (ChatGPTStatus) {
+      setMessage(feedback.ChatGPTResponse)
     } else{
       setMessage(get_random(feedback.text))
     }

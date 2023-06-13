@@ -2,7 +2,8 @@ import axios from 'axios'
 import qs from 'querystring'
 import { FeedbackLogElement, getIsBonusRoundActive, getUserID } from './localStorage'
 
-export const logGuess = (guess: string, guesses: string[], wasValid: boolean, solution: string, roundIndex: number, prompt: string, ai_text_status: boolean, onSuccess: (response: any) => any) => {
+
+export const logGuess = (guess: string, guesses: string[], wasValid: boolean, solution: string, roundIndex: number, prompt: string, ChatGPTStatus: boolean, onSuccess: (response: any) => any) => {
   axios.post('/api/logguess/', qs.stringify({
     user_id: getUserID(),
     guess: guess,
@@ -12,7 +13,7 @@ export const logGuess = (guess: string, guesses: string[], wasValid: boolean, so
     solution: solution,
     timestamp: Date.now(),
     prompt: prompt,
-    ai_text_status: ai_text_status
+    ChatGPTStatus: ChatGPTStatus
   }))
     .then(function(response) {
       onSuccess(response.data)

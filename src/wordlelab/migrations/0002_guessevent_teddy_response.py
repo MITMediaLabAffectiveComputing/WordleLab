@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='guessevent',
             name='teddy_response',
-            field=models.CharField(default='slay girlboss!!!', max_length=64),
+            field=models.CharField(default='', max_length=64),
             preserve_default=False,
         ),
     ]

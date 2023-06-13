@@ -4,6 +4,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 
 DJANGO_SECRET_KEY = 'PUT YOUR SECRET KEY HERE!'
+CHATGPT_API_KEY = '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'
 
 ALLOWED_HOSTNAMES = ['*']
 

@@ -52,11 +52,11 @@ import { PostSurveyEmotionalStateModal } from './components/modals/postsurvey/Po
 
 import {prompt} from './components/FeedbackMessage'
 
-let Mesagee = "Enjoy Wordle - you've got this!"
-let PrevMesage = "Enjoy Wordle - you've got this!"
+let CurrentMessage = "Enjoy Wordle - you've got this!"
+let PreviousMessage = "Enjoy Wordle - you've got this!"
 
 export const onTextChange = () => {
-  PrevMesage = Mesagee
+  PreviousMessage = CurrentMessage
 }
 
 function App() {
@@ -88,13 +88,13 @@ function App() {
 
   //API STATE
   const [isCallingtotheBackend, setisCallingtotheBackend] = useState(false)
-  let TextStatus = true
-  let AI_text_status = true
+  let TextStatus = true //whether to show the text animation or not
+  let ChatGPTStatus = true //wehther to use the hardcoded or chatgptresponses
 
   //handle api return
   const onSuccess = (resp: any) => {
-    PrevMesage = Mesagee
-    Mesagee = resp
+    PreviousMessage = CurrentMessage
+    CurrentMessage = resp
     setisCallingtotheBackend(false)
   }
 
@@ -309,6 +309,12 @@ function App() {
   TextStatus = false
 
   const onEnter = () => {
+    if (getHasEnhancedFeedback()) {
+      ChatGPTStatus = true
+    } else {
+      ChatGPTStatus = false
+    }
+
     if (isGameWon || isGameLost || isCallingtotheBackend) {
       return
     }
@@ -322,7 +328,7 @@ function App() {
 
     if (!isWordInWordList(currentGuess)) {
       setisCallingtotheBackend(true);
-      logGuess(currentGuess, guesses, false, getSolution(), currentSolutionIndex, prompt, AI_text_status, onSuccess)
+      logGuess(currentGuess, guesses, false, getSolution(), currentSolutionIndex, prompt, ChatGPTStatus, onSuccess)
       setInvalidGuessCount(invalidGuessCount + 1)
       setCurrentRowClass('jiggle')
       if (!getHasEnhancedFeedback()) {
@@ -338,7 +344,7 @@ function App() {
     // enforce hard mode - all guesses must contain all previously revealed letters
     if (isHardMode) {
       setisCallingtotheBackend(true);
-      logGuess(currentGuess, guesses, false, getSolution(), currentSolutionIndex, prompt, AI_text_status, onSuccess)
+      logGuess(currentGuess, guesses, false, getSolution(), currentSolutionIndex, prompt, ChatGPTStatus, onSuccess)
       const firstMissingReveal = findFirstUnusedReveal(currentGuess, guesses)
       if (firstMissingReveal) {
         setCurrentRowClass('jiggle')
@@ -364,7 +370,7 @@ function App() {
     ) {
 
       setisCallingtotheBackend(true);
-      logGuess(currentGuess, guesses, true, getSolution(), currentSolutionIndex, prompt, AI_text_status, onSuccess)
+      logGuess(currentGuess, guesses, true, getSolution(), currentSolutionIndex, prompt, ChatGPTStatus, onSuccess)
       setGuesses([...guesses, currentGuess])
       setCurrentGuess('')
 
@@ -393,7 +399,7 @@ function App() {
     }
   }
 
-  if (Mesagee != PrevMesage) {
+  if (CurrentMessage != PreviousMessage) {
     TextStatus = true
   } else {
     TextStatus = false
@@ -415,9 +421,9 @@ function App() {
           }
                            currentRound={currentSolutionIndex}
                            isIdle={isIdle}
-                           Message = {Mesagee}
+                           Message = {CurrentMessage}
                            TextStatus = {TextStatus}
-                           ai_text_status = {AI_text_status}
+                           ChatGPTStatus = {ChatGPTStatus}
                            onFeedback={onFeedback}
           />
           <Grid
@@ -581,7 +587,7 @@ function App() {
           isGameWon={isGameWon}
           numberOfGuessesMade={guesses.length}
           TextStatus={TextStatus}
-          ai_text_status={AI_text_status}
+          ChatGPTStatus={ChatGPTStatus}
         />
         <SettingsModal
           isOpen={isSettingsModalOpen}
